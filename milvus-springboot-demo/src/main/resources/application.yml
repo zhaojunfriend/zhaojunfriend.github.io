@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+# Milvus 配置
+milvus:
+  host: localhost
+  port: 19530
+  # 集合名称
+  collection-name: demo_collection
+  # 向量维度
+  dimension: 128
+  # 索引类型: IVF_FLAT, IVF_SQ8, IVF_PQ, HNSW, ANNOY, FLAT
+  index-type: IVF_FLAT
+  # 度量类型: L2, IP, COSINE
+  metric-type: L2
+  # 索引参数
+  nlist: 1024
+  # 搜索参数
+  nprobe: 10
+
+spring:
+  application:
+    name: milvus-springboot-demo
+
+logging:
+  level:
+    com.example.milvus: DEBUG
+    io.milvus: INFO
