@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 
@@ -16,6 +17,24 @@ if (!fs.existsSync(FILES_DIR)) {
 
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
+
+// Rate limiting: max 60 API requests per minute per IP
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+app.use('/api/', apiLimiter);
+
+// Rate limit static/SPA routes: max 120 requests per minute per IP
+const staticLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Serve the frontend
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
@@ -130,7 +149,7 @@ app.delete('/api/files/:name', (req, res) => {
 });
 
 // Fall-through: serve the SPA for any non-API route
-app.get('*', (req, res) => {
+app.get('*', staticLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
