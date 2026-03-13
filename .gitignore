@@ -1,0 +1,21 @@
+# Dependencies
+backend/node_modules/
+frontend/node_modules/
+
+# Runtime files created by the server
+backend/files/
+
+# npm lock files (optional to include, but exclude here for brevity)
+package-lock.json
+frontend/package-lock.json
+backend/package-lock.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
